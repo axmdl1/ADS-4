@@ -4,48 +4,58 @@ import java.util.List;
 import java.util.Map;
 
 public class MyGraph<Vertex> {
-    private final boolean undirected;
-    private final Map<Vertex, List<Vertex>> map = new HashMap<>();
+    private final Map<Vertex, List<Vertex>> map;
 
     public MyGraph() {
-        this(true);
-    }
-
-    public MyGraph(boolean undirected) {
-        this.undirected = undirected;
+        map = new HashMap<>();
     }
 
     public void addVertex(Vertex vertex) {
-        if (hasVertex(vertex))
-            return;
-        
+        checkVertex(vertex);
         map.put(vertex, new LinkedList<>()); 
     }
 
     public void addEdge(Vertex source, Vertex dest) {
-        if (!hasVertex(source))
-            addVertex(source);
-
-        if (!hasVertex(dest))
-            addVertex(dest);
-
-        if (hasEdge(source, dest) || source.equals(dest))
-            return;
+        checkVertex(source);
+        checkVertex(dest);
 
         map.get(source).add(dest);
-
-        if (undirected)
-            map.get(dest).add(source);
+        map.get(dest).add(source);
     }
 
-    private boolean hasEdge(Vertex source, Vertex dest) {
-        if (!hasVertex(source))
-            return false;
-        return map.get(source).contains(dest);
+    public int countVertices(){
+        return map.size();
     }
 
-    private boolean hasVertex(Vertex vertex) {
-        return map.containsKey(vertex);
+    public boolean hasEdge(Vertex source, Vertex dest) {
+        checkVertex(source);
+        checkVertex(dest);
+        List<Vertex> neighbors = getNeighbors(source);
+        return neighbors != null && neighbors.contains(dest);
+    }
+
+    public List<Vertex> getNeighbors(Vertex vertex) {
+        return map.get(vertex);
+    }
+
+    private void checkVertex(Vertex vertex) {
+        if (!map.containsKey(vertex)){
+            throw new IndexOutOfBoundsException("Vertex not found");
+        }
+    }
+
+    public void printGraph() {
+        for (Vertex vertex : map.keySet()) {
+            System.out.println("Vertex: " + vertex + " connected: " + getNeighbors(vertex));
+        }
+    }
+
+    public void removeEdge(Vertex source, Vertex dest) {
+        checkVertex(source);
+        checkVertex(dest);
+
+        map.get(source).remove(dest);
+        map.get(dest).remove(source);
     }
 
 }

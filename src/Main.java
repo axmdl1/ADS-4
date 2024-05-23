@@ -1,18 +1,26 @@
 class Main {
     public static void main(String[] args) {
-        MyGraph<Integer> myGraph = new MyGraph<>();
-        myGraph.addVertex(12);
-        myGraph.addVertex(1);
-        myGraph.addVertex(5);
-        myGraph.addVertex(10);
-        myGraph.addVertex(9);
+        MyGraph<String> graph = new MyGraph<>();
 
-        myGraph.addEdge(1,5);
-        myGraph.addEdge(5,6);
-        myGraph.addEdge(6,7);
-        myGraph.addEdge(7,10);
-        myGraph.addEdge(10,9);
+        graph.addVertex("Almaty");
+        graph.addVertex("Astana");
+        graph.addVertex("Shymkent");
+        graph.addVertex("Pavlodar");
+        graph.addVertex("Oral");
+        graph.addVertex("Kyzylorda");
 
-        myGraph.printGraph();
+        graph.addEdge("Almaty","Astana");
+        graph.addEdge("Almaty","Shymkent");
+        graph.addEdge("Astana","Pavlodar");
+        graph.addEdge("Astana","Oral");
+        graph.addEdge("Astana","Kyzylorda");
+
+        System.out.println(graph.getNeighbors("Almaty"));
+        graph.printGraph();
+        System.out.println(" ---------------- ");
+        graph.removeEdge("Astana", "Oral");
+        graph.removeVertex("Oral");
+        graph.printGraph();
+        System.out.println(graph.countVertices());
     }
 }

@@ -11,8 +11,10 @@ public class MyGraph<Vertex> {
     }
 
     public void addVertex(Vertex vertex) {
-        checkVertex(vertex);
-        map.put(vertex, new LinkedList<>()); 
+        if (!map.containsKey(vertex))
+            map.put(vertex, new LinkedList<>());
+        else
+            throw new IllegalArgumentException("Vertex already exists!");
     }
 
     public void addEdge(Vertex source, Vertex dest) {
@@ -58,4 +60,12 @@ public class MyGraph<Vertex> {
         map.get(dest).remove(source);
     }
 
+    public void removeVertex(Vertex vertex) {
+        checkVertex(vertex);
+        for (Vertex neighbor : getNeighbors(vertex)){
+            map.get(neighbor).remove(vertex);
+        }
+        map.remove(vertex);
+        System.out.println("Vertex -> " + vertex + " removed");
+    }
 }

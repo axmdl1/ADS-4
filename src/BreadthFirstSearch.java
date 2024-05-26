@@ -1,7 +1,7 @@
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class BreadthFirstSearch<V> extends Search<V>{
+public class BreadthFirstSearch<V> extends Search<V> {
 
     public BreadthFirstSearch(MyGraph<V> graph, V source) {
         super(source);

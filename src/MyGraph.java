@@ -1,7 +1,4 @@
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MyGraph<Vertex> {
     private final boolean undirected;
@@ -15,11 +12,11 @@ public class MyGraph<Vertex> {
         this.undirected = undirected;
     }
 
-    public void addVertex(Vertex vertex) {
-        if (hasVertex(vertex))
+    public void addVertex(Vertex v) {
+        if (hasVertex(v))
             return;
-        
-        map.put(vertex, new LinkedList<>()); 
+
+        map.put(v, new LinkedList<>());
     }
 
     public void addEdge(Vertex source, Vertex dest) {
@@ -29,8 +26,9 @@ public class MyGraph<Vertex> {
         if (!hasVertex(dest))
             addVertex(dest);
 
-        if (hasEdge(source, dest) || source.equals(dest))
-            return;
+        if (hasEdge(source, dest)
+                || source.equals(dest))
+            return; // reject parallels & self-loops
 
         map.get(source).add(dest);
 
@@ -38,14 +36,36 @@ public class MyGraph<Vertex> {
             map.get(dest).add(source);
     }
 
-    private boolean hasEdge(Vertex source, Vertex dest) {
-        if (!hasVertex(source))
-            return false;
+    public int getVerticesCount() {
+        return map.size();
+    }
+
+    public int getEdgesCount() {
+        int count = 0;
+        for (Vertex v : map.keySet()) {
+            count += map.get(v).size();
+        }
+
+        if (undirected)
+            count /= 2;
+
+        return count;
+    }
+
+
+    public boolean hasVertex(Vertex v) {
+        return map.containsKey(v);
+    }
+
+    public boolean hasEdge(Vertex source, Vertex dest) {
+        if (!hasVertex(source)) return false;
         return map.get(source).contains(dest);
     }
 
-    private boolean hasVertex(Vertex vertex) {
-        return map.containsKey(vertex);
-    }
+    public List<Vertex> adjacencyList(Vertex v) {
+        if (!hasVertex(v)) return null;
 
+        return map.get(v);
+    }
 }
+

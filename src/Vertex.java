@@ -3,8 +3,8 @@ import java.util.Map;
 import java.util.Objects;
 
 public class Vertex<V> {
-    private V data;
-    private Map<Vertex<V>, Double> adjacentVertices;
+    protected Map<Vertex<V>, Double> adjacentVertices;
+    public V data;
 
     public Vertex(V data) {
         this.data = data;

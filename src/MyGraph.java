@@ -1,71 +1,71 @@
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MyGraph<Vertex> {
-    private final Map<Vertex, List<Vertex>> map;
+    private final boolean undirected;
+    private final Map<Vertex, List<Vertex>> map = new HashMap<>();
 
     public MyGraph() {
-        map = new HashMap<>();
+        this(true);
     }
 
-    public void addVertex(Vertex vertex) {
-        if (!map.containsKey(vertex))
-            map.put(vertex, new LinkedList<>());
-        else
-            throw new IllegalArgumentException("Vertex already exists!");
+    public MyGraph(boolean undirected) {
+        this.undirected = undirected;
+    }
+
+    public void addVertex(Vertex v) {
+        if (hasVertex(v))
+            return;
+
+        map.put(v, new LinkedList<>());
     }
 
     public void addEdge(Vertex source, Vertex dest) {
-        checkVertex(source);
-        checkVertex(dest);
+        if (!hasVertex(source))
+            addVertex(source);
+
+        if (!hasVertex(dest))
+            addVertex(dest);
+
+        if (hasEdge(source, dest)
+                || source.equals(dest))
+            return; // reject parallels & self-loops
 
         map.get(source).add(dest);
-        map.get(dest).add(source);
+
+        if (undirected)
+            map.get(dest).add(source);
     }
 
-    public int countVertices(){
+    public int getVerticesCount() {
         return map.size();
     }
 
+    public int getEdgesCount() {
+        int count = 0;
+        for (Vertex v : map.keySet()) {
+            count += map.get(v).size();
+        }
+
+        if (undirected)
+            count /= 2;
+
+        return count;
+    }
+
+
+    public boolean hasVertex(Vertex v) {
+        return map.containsKey(v);
+    }
+
     public boolean hasEdge(Vertex source, Vertex dest) {
-        checkVertex(source);
-        checkVertex(dest);
-        List<Vertex> neighbors = getNeighbors(source);
-        return neighbors != null && neighbors.contains(dest);
+        if (!hasVertex(source)) return false;
+        return map.get(source).contains(dest);
     }
 
-    public List<Vertex> getNeighbors(Vertex vertex) {
-        return map.get(vertex);
-    }
+    public List<Vertex> adjacencyList(Vertex v) {
+        if (!hasVertex(v)) return null;
 
-    private void checkVertex(Vertex vertex) {
-        if (!map.containsKey(vertex)){
-            throw new IndexOutOfBoundsException("Vertex not found");
-        }
-    }
-
-    public void printGraph() {
-        for (Vertex vertex : map.keySet()) {
-            System.out.println("Vertex: " + vertex + " connected: " + getNeighbors(vertex));
-        }
-    }
-
-    public void removeEdge(Vertex source, Vertex dest) {
-        checkVertex(source);
-        checkVertex(dest);
-
-        map.get(source).remove(dest);
-        map.get(dest).remove(source);
-    }
-
-    public void removeVertex(Vertex vertex) {
-        checkVertex(vertex);
-        for (Vertex neighbor : getNeighbors(vertex)){
-            map.get(neighbor).remove(vertex);
-        }
-        map.remove(vertex);
-        System.out.println("Vertex -> " + vertex + " removed");
+        return map.get(v);
     }
 }
+

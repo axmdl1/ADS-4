@@ -24,7 +24,7 @@ public class DijkstraSearch<Vertex> extends Search<Vertex> {
             marked.add(currentNode);
             unsettledNodes.remove(currentNode);
 
-            for (Vertex neighbor : graph.adjacencyList(currentNode)) {
+            for (Vertex neighbor : edgeTo.keySet()) {
                 double newDistance = getShortestDistance(currentNode) + getDistance(currentNode, neighbor);
 
                 if (getShortestDistance(neighbor) > newDistance) {
